@@ -2,27 +2,16 @@
 #include <stdlib.h>
 
 #define TRUE 1
-#define N 3
 
-int buffer[N];
+int *buffer;
 int count;
 int num, x;
 
-void producer();
-void consumer();
-
-int main(){
-	while(TRUE){
-		producer();
-		consumer();
-	}
-	return 0;
-}
 
 void produce_item(int count){
 	num = rand();
 	buffer[count] = num;
-	printf("Produced %d in buffer slot %d\n", num, count );
+	printf("Produced %d in buffer slot %d\n", num, count);
 }
 
 int consume_item(int count){
@@ -31,7 +20,7 @@ int consume_item(int count){
 	return num;
 }
 
-void producer(){
+void producer(int N){
 	count = 0;
 	while(count < N){
 		produce_item(count);
@@ -39,11 +28,29 @@ void producer(){
 	}
 }
 
-void consumer(){
+void consumer(int N){
 	count = 0;
 	while(count < N){
 		x = consume_item(count);
 		count++;
 	}
+}
+
+int main(int argc, char const *argv[])
+{
+	int N;
+	if (argc != 2){
+		N = 100;
+	}else{
+		N = atoi(argv[1]);
+	}
+
+	buffer = malloc(N * sizeof(int));
+
+	producer(N);
+	consumer(N);
+
+	free(buffer);
+	return 0;
 }
 
