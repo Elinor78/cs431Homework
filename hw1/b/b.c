@@ -1,81 +1,64 @@
-#include <pthread.h>
+#include <pthread.h>		// for pthread_t, pthread_create, pthread_join
+#include <stdio.h>			// for print_f
 #include <semaphore.h>
-#include <stdio.h>
 
-#define N 100		// number of slots in the buffer
+#define N 100				// number of slots in buffer
 #define TRUE 1
 #define FALSE 0
+int buffer[N];
+sem_t empty_sem;
+sem_t full_sem;
+sem_t mutex_sem;
 
-sem_t empty;
-int count = 0;
-
-
-int produce_item() {
-	//printf("Produced item: %d\n", count);
-	return count;
+void produce_item(int i) {
+	buffer[i] = i;
+	printf("Produced item %d, inserted in buffer slot %d\n", buffer[i], i);
 }
 
-int remove_item() {
-	printf("Removed item: %d\n", count);
-	return count;
+int consume_item(int i) {	
+	printf("Consumed item %d, removed from buffer slot %d\n", buffer[i], i);
+	int item = buffer[i];
+	buffer[i] = -1;
+
+	return item;
 }
 
-void consume_item(int item) {
-	printf("Consumed item: %d\n", item);
-	return;
+void *producer(void *ptr) {
+		int i;
+		for (i = 0; i < N; i++) {
+				sem_wait(&empty_sem);
+				sem_wait(&mutex_sem);
+				produce_item(i);
+				sem_post(&mutex_sem);
+				sem_post(&full_sem);
+		}
 }
 
-void insert_item(int item) {
-	printf("Inserted item: %d\n", item);
-	return;
-}	
-
-
-void* producer (void* ptr) {
-	int item;
-
-	while (TRUE) {
-		item = produce_item();
-
-		sem_wait(&empty);		  // empty initially = N; if value of semaphore is zero, calling process blocks
-
-  	if (count < N) {	  	// enter critical region
-			count = count + 1;
-			insert_item(item);	// put new item in buffer
-		}							        // leave critical region
-
-		sem_post(&empty);	  	// increments value of mutex, wakes up blocked process waiting on semaphore
-	}
-	return NULL;
-}
-
-void* consumer (void *ptr) {
-	int item;
-	
-	while (TRUE) {	
-		sem_wait(&empty);			  // empty initially = N; if value of semaphore is zero, calling process blocks
-
-		if (count > 0) {				// enter critical region
-			count = count - 1;
-			item = remove_item();	// remove item from buffer
-			consume_item(item);		// print item
-		}								        // leave critical region
-
-		sem_post(&empty);
-	}
-	return NULL;
+void *consumer(void *ptr) {
+		int i;
+		for (i = 0; i < N; ++i) {
+				sem_wait(&full_sem);
+				sem_wait(&mutex_sem);
+				consume_item(i);
+				sem_post(&mutex_sem);
+				sem_post(&empty_sem);
+		}
 }
 
 
-int main() {
-	
-	sem_init(&empty, 0, N);	// empty = N empty slots in buffer
+int main(int argc, char const *arg[]) {
+		sem_init(&empty_sem, 0, N);
+		sem_init(&full_sem, 0, 0);
+		sem_init(&mutex_sem, 0, 1);
 
-	pthread_t cons, prod;
-	pthread_create (&cons, NULL, &consumer, NULL);
-	pthread_create (&prod, NULL, &producer, NULL);
-    	
-	while(1)
-	fputs("", stderr);
-	return 0;
+		pthread_t cons_thread, prod_thread;
+		pthread_create(&prod_thread, NULL, producer, NULL);
+		pthread_create(&cons_thread, NULL, consumer, NULL);
+		pthread_join(prod_thread, 0);
+		pthread_join(cons_thread, 0);
+
+		sem_destroy(&empty_sem);
+		sem_destroy(&full_sem);
+
+		return 0;
 }
