@@ -1,10 +1,22 @@
-#include <stdio.h>			// printf
-#include <stdlib.h>			// exit
-#include <errno.h>			// errno
-#include <sys/types.h>		// key_t, sem_t
-#include <sys/shm.h>		// shmat, IPC_RMID
-#include <semaphore.h>		// sem_open, sem_destroy, sem_wait
-#include <fcntl.h>			// 0_CREAT, 0_EXEC
+/*
+ * 2.c = Main program
+ *
+ * Instructions:
+ * 1) Compile
+ * 2) Name 2 whatever you want and link -lpthread
+ * 3) Name producer.exe and consumer.exe and link -lpthread
+ * (or change name of files below)
+ * 
+ * Keep all files in the same folder
+ */
+ 
+#include <stdio.h>       // printf
+#include <stdlib.h>      // exit
+#include <errno.h>       // errno
+#include <sys/types.h>   // key_t, sem_t
+#include <sys/shm.h>     // shmat, IPC_RMID
+#include <semaphore.h>   // sem_open, sem_destroy, sem_wait
+#include <fcntl.h>       // 0_CREAT, 0_EXEC
 
 #define MAX 10
 
