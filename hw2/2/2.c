@@ -31,6 +31,10 @@ int main(void) {
 		perror("Allocating shared memory segment failed.");
 		exit(1);
 	}
+	
+	/* Create semaphore */
+	sem = sem_open("semaphoreV", O_CREAT | O_EXCL, 0666, 1);
+	sem_unlink("semaphoreV");
 
 	/* Use fork() and exec() to create producer and consumer processes */
 	if (consumer = fork()) {
