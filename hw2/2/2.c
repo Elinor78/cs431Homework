@@ -1,16 +1,22 @@
 /*
  * 2.c = Main program
- * Compile and link -lpthread
+ *
+ * Instructions:
+ * 1) Compile
+ * 2) Name 2 whatever you want and link -lpthread
+ * 3) Name producer.exe and consumer.exe and link -lpthread
+ * (or change name of files below)
+ * 
  * Keep all files in the same folder
  */
 
-#include <stdio.h>			// printf
-#include <stdlib.h>			// exit
-#include <errno.h>			// errno
-#include <sys/types.h>		// key_t, sem_t
-#include <sys/shm.h>		// shmat, IPC_RMID
-#include <semaphore.h>		// sem_open, sem_destroy, sem_wait
-#include <fcntl.h>			// 0_CREAT, 0_EXEC
+#include <stdio.h>       // printf
+#include <stdlib.h>      // exit
+#include <errno.h>       // errno
+#include <sys/types.h>   // key_t, sem_t
+#include <sys/shm.h>     // shmat, IPC_RMID
+#include <semaphore.h>   // sem_open, sem_destroy, sem_wait
+#include <fcntl.h>       // 0_CREAT, 0_EXEC
 
 #define MAX 10
 
@@ -20,6 +26,7 @@ int main(void) {
 	int semid;     // semaphore id
 	key_t shm_key; // shared memory key
 	key_t sem_key; // semaphore key
+	sem_t *sem;    // semaphore
 	char* argv[] = {NULL};
 
 	/* Generate shared memory key */
@@ -30,7 +37,7 @@ int main(void) {
 		perror("Allocating shared memory segment failed.");
 		exit(1);
 	}
-	
+
 	/* Create semaphore */
 	sem = sem_open("semaphoreV", O_CREAT | O_EXCL, 0666, 1);
 	sem_unlink("semaphoreV");
@@ -45,7 +52,7 @@ int main(void) {
 		exit(0);
 	} else {
 		printf("Waiting for producer and consumer to finish.\n");
-		sleep(10);
+		sleep(15);
 
 		/* Deallocate the shared memory segment. */
 		shmctl(shmid, IPC_RMID, 0);
