@@ -32,13 +32,13 @@ int main(int argc, char const *argv[])
     int status;
     pid_t wpid;
 
-    if (argc != 2){
-        fprintf(stderr, "Need two arguments\n");
+    if (argc != 3){
+        fprintf(stderr, "Need two arguments: path for socket, and message\n");
         exit(1);
     }   
 
     char* arg_list_1[] = { "./consumer", argv[1], NULL};
-    char* arg_list_2[] = {"./producer", argv[1], "Hello, this is the message from the client/producer", NULL};
+    char* arg_list_2[] = {"./producer", argv[1], argv[2], NULL};
 
     spawn("./consumer", arg_list_1);
 

@@ -1,2 +1,5 @@
 *.o
 *proc*
+consumer
+producer
+*tar.gz
