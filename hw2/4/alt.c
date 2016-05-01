@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
 void writer (const char* message, int count, FILE* stream)
 {
   for(; count > 0; --count)
@@ -26,62 +27,68 @@ void reader (FILE* stream)
      //Copy Stream into buffer
     fputs(buffer, stdout);
     if (feof(stream)){
-    	//exit(0);
-
-    }
-    if(ferror(stream)){
-    	exit(1);
+    	exit(0);
     }
    }
 
+}
+void producer(int fd[])
+{
+	pid_t pid;
+
+	if ((pid = fork()) == -1){
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0){
+		//producer process
+		printf("Child 2 %d\n", getpid());
+		FILE* stream;
+		close(fd[0]);
+
+		stream = fdopen(fd[1], "w");
+		writer("Hello!", 5, stream);
+		close(fd[1]);
+		exit(0);
+	}
+	//parent does nothing
+}
+
+void consumer(int fd[])
+{
+	pid_t pid;
+
+	if ((pid = fork()) == -1){
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0){
+		//consumer process
+		printf("Child 1 %d\n", getpid());
+		FILE* stream;
+		close(fd[1]);
+
+		stream = fdopen(fd[0], "r");
+		reader(stream);
+		close(fd[0]);
+		exit(0);
+	}
+	//parent does nothing
 }
 
 int main(int argc, char const *argv[])
 {
 	int file_descriptors[2];
-	pid_t pid, wpid;
+	pid_t wpid;
 	int status;
 
 	pipe(file_descriptors);
-
-	
-	pid = fork();
-
-	if(pid == 0)
-	{
-		printf("Child 1 %d\n", getpid());
-		//consumer process
-		FILE* stream;
-		close(file_descriptors[1]);
-
-		stream = fdopen(file_descriptors[0], "r");
-		reader(stream);
-		close(file_descriptors[0]);
-		//exit(0);
-
-	}
-	else
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			//producer process
-			printf("Child 2 %d\n", getpid());
-			FILE* stream;
-			close(file_descriptors[0]);
-
-			stream = fdopen(file_descriptors[1], "w");
-			writer("Hello!", 5, stream);
-			close(file_descriptors[1]);
-			//exit(0);
-		}
-		else
-		{
-			//nothing, parent...
-		}
-	}
+	consumer(file_descriptors);
+	producer(file_descriptors);
 	close(file_descriptors[0]);
 	close(file_descriptors[1]);
+
+
 	while ((wpid = wait(&status)) > 0){
 		printf("Exit status of process %d was %d\n", (int)wpid, status);
 	}
