@@ -52,7 +52,7 @@ int main(void) {
 	/* Attach segment to data space */
 	buffer = (int*)shmat(shmid, NULL, 0);
 
-	sem = sem_open("semaphoreV", O_CREAT | O_EXCL, 0666, 1);
+	sem = sem_open("semaphoreV", O_CREAT, 0666, 1);
 	sem_unlink("semaphoreV");
 
 	start = time(NULL);
