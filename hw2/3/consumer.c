@@ -1,3 +1,17 @@
+/*
+ * 3.c = Main program
+ *
+ * Instructions:
+ * 1) Compile
+ * 2) Name 3 whatever you want and link -lpthread
+ * 3) Name producer.exe and consumer.exe and link -lpthread
+ * (or change name of files below)
+ *
+ * sharedfile.txt can have anything in it as long as it has <= 10 chars
+ * 
+ * Keep all files in the same folder
+ */
+ 
 #include <stdio.h>       // printf
 #include <stdlib.h>      // exit
 #include <errno.h>       // errno
