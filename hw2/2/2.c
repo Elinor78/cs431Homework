@@ -1,3 +1,10 @@
+/*
+ * 2.c = Main program
+ * Compile 2.c, producer.c, and consumer.c
+ * Link -lpthread to producer and consumer
+ * Keep all files in the same folder
+ */
+
 #include <stdio.h>			// printf
 #include <stdlib.h>			// exit
 #include <errno.h>			// errno
@@ -25,8 +32,7 @@ int main(void) {
 		exit(1);
 	}
 
-	printf("shared mem. seg id = %d\n", shmid);
-
+	/* Use fork() and exec() to create producer and consumer processes */
 	if (consumer = fork()) {
 		if (producer = fork()) {
 			execv("producer.exe", argv);
