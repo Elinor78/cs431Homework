@@ -1,7 +1,6 @@
 /*
  * 2.c = Main program
- * Compile 2.c, producer.c, and consumer.c
- * Link -lpthread to producer and consumer
+ * Compile and link -lpthread
  * Keep all files in the same folder
  */
 
