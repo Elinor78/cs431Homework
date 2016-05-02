@@ -33,10 +33,12 @@ int produce() {
 		sem_wait(sem);
 
 		/* Produce item */
-		if (buffer[i] == 0) {
-			buffer[i] = i;
+		if (buffer[i] != i+1) {
+			buffer[i] = i+1;
+			printf("Produce: %d of %d.\n", buffer[i], MAX);
+		} else {
+			printf("Produced nothing. Buffer full.\n");
 		}
-		printf("Produce: %d\n", buffer[i]);
 
 		/* Do up on semaphore */
 		sem_post(sem);
@@ -64,8 +66,8 @@ int main(void) {
 	/* Attach segment to data space */
 	buffer = (int*)shmat(shmid, NULL, 0);
 
-	sem = sem_open("semaphoreV", O_CREAT, 0666, 1);
-	sem_unlink("semaphoreV");
+	sem = sem_open("semaphorV", O_CREAT, 0666, 1);
+	sem_unlink("semaphore");
 
 	start = time(NULL);
 	while(terminator) {
