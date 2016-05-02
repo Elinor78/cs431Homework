@@ -222,5 +222,8 @@ int main(int argc, char **argv){
 	pthread_cond_destroy(&condition_producer);
 	pthread_mutex_destroy(&mutex);
 
+	// deallocate 2-dimensional buffer array
+	free(buffer);
+
 	return 0;
 }
