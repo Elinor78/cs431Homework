@@ -22,7 +22,7 @@
 #define MAX 10
 
 int main(void) {
-	pid_t producer, consumer, tpid;
+	pid_t producer, consumer, wpid;
 	int status;    // status of child
 	int semid;     // semaphore id
 	sem_t *sem;    // semaphore
@@ -34,11 +34,11 @@ int main(void) {
 	sem_unlink("semaphoreV");
 
 	/* Use fork() and exec() to create producer and consumer processes */
-	consumer = fork()
-	if (consumer == 0 {
+	consumer = fork();
+	if (consumer == 0) {
 		// Child of main
-		producer = fork()
-		if (producer == 0 {
+		producer = fork();
+		if (producer == 0) {
 			// Child of consumer
 			execv("producer.exe", argv);
 			exit(1);
