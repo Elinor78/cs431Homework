@@ -33,10 +33,12 @@ int consume() {
 		sem_wait(sem);
 
 		/* Consume item */
-		if (buffer[i] == i) {
+		if (buffer[i] != 0) {
 			buffer[i] = 0;
+			printf("Consume: %d of %d. (Value = %d)\n", i+1, MAX, buffer[i]);
+		} else {
+			printf("Consumed nothing. Buffer empty.\n");
 		}
-		printf("Consume: %d\n", buffer[i]);
 
 		/* Do up on semaphore */
 		sem_post(sem);
@@ -65,8 +67,8 @@ int main(void) {
 	buffer = (int*)shmat(shmid, NULL, 0);
 
 	/* Create semaphore */
-	sem = sem_open("semaphoreV", O_CREAT, 0666, 1);
-	sem_unlink("semaphoreV");
+	sem = sem_open("semaphore", O_CREAT, 0666, 1);
+	sem_unlink("semaphore");
 
 	start = time(NULL);
 	while(terminator) {
