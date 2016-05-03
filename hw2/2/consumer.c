@@ -2,12 +2,8 @@
  * 2.c = Main program
  *
  * Instructions:
- * 1) Compile
- * 2) Name 2 whatever you want and link -lpthread
- * 3) Name producer.exe and consumer.exe and link -lpthread
- * (or change name of files below)
- * 
- * Keep all files in the same folder
+ * 1) Download all files to the same folder
+ * 2) Run "make" command
  */
  
 #include <stdio.h>       // printf
@@ -18,7 +14,7 @@
 #include <semaphore.h>   // sem_open, sem_destroy, sem_wait
 #include <fcntl.h>       // 0_CREAT, 0_EXEC
 
-#define MAX 10
+#define MAX 1000
 
 int shmid;   // shared memory id
 sem_t *sem;  // semaphore
@@ -27,22 +23,23 @@ int* buffer; // buffer in shared memory
 int consume() {
 	int i;
 
+	/* Do down on semaphore */
+	sem_wait(sem);
+
 	/* Consume items in shared memory */
 	for (i = 0; i < MAX; i++) {
-		/* Do down on semaphore */
-		sem_wait(sem);
-
 		/* Consume item */
 		if (buffer[i] != 0) {
 			buffer[i] = 0;
-			printf("Consume: %d of %d. (Value = %d)\n", i+1, MAX, buffer[i]);
+			printf("Consumed: %d of %d items left.\n", MAX-i-1, MAX);
 		} else {
 			printf("Consumed nothing. Buffer empty.\n");
+			break;
 		}
-
-		/* Do up on semaphore */
-		sem_post(sem);
 	}
+
+	/* Do up on semaphore */
+	sem_post(sem);
 
 	return 0;
 }
