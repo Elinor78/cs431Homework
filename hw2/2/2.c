@@ -2,12 +2,8 @@
  * 2.c = Main program
  *
  * Instructions:
- * 1) Compile
- * 2) Name 2 whatever you want and link -lpthread
- * 3) Name producer.exe and consumer.exe and link -lpthread
- * (or change name of files below)
- * 
- * Keep all files in the same folder
+ * 1) Download all files to the same folder
+ * 2) Run "make" command
  */
 
 #include <stdio.h>       // printf
@@ -18,7 +14,7 @@
 #include <semaphore.h>   // sem_open, sem_destroy, sem_wait
 #include <fcntl.h>       // 0_CREAT, 0_EXEC
 
-#define MAX 10
+#define MAX 1000
 
 int main(void) {
 	pid_t producer, consumer, wpid;
