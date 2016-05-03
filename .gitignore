@@ -1,2 +1,4 @@
 *.o
 *proc*
+*.tar.gz
+
