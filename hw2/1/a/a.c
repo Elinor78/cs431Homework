@@ -1,5 +1,5 @@
 /*
-	USAGE: ./1aproc 4 2 3 3000
+	USAGE: ./aproc 4 2 3 3000
 
 	SEMAPHORES implementation
 	BufferPrinter prints the status of the buffers.
