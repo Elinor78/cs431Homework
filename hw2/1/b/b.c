@@ -1,5 +1,5 @@
 /*
-	USAGE: ./1bproc 4 2 3 3000
+	USAGE: ./bproc 4 2 3 3000
 
 	MUTEXES and CONDITION VARIABLES implementation
 	BufferPrinter prints the status of the buffers.
