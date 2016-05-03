@@ -21,4 +21,5 @@ producer.o: producer.c
 consumer.o: consumer.c
 	$(CC) -c consumer.c
 
-clean: rm -f *.o 2 producer.exe consumer.exe
+clean: 
+	rm -f *.o 2 producer.exe consumer.exe
